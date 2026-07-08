@@ -9,4 +9,9 @@ class Producto extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductoFactory> */
     use HasFactory;
+
+    public function precios()
+    {
+        return $this->hasMany('App\Models\Precio');
+    }
 }

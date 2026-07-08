@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Producto;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
@@ -11,9 +12,22 @@ class ProductoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+
+        $search = $request->input('search');
+
+        $productos = Producto::with('precios.unidad')
+            ->when($search, function ($query, $search) {
+                $query->where('nombre', 'like', "%{$search}%");
+            })
+            ->get();
+
+        return response()->json([
+            'ok' => true,
+            'data' => $productos
+        ], 200);
     }
 
     /**
